@@ -102,30 +102,62 @@
 </div>
 
 <script>
-  function toggle(id) {
-    const el = document.getElementById(id);
-    el.style.display = el.style.display === "block" ? "none" : "block";
-  }
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-  let pacientes = [];
+  const supabaseUrl = "https://xgbwkppdqoqnecupqzsh.supabase.co";
+  const supabaseKey = "PEGA_AQUI_TU_ANON_KEY";
 
-  function guardarPaciente() {
+  const client = createClient(supabaseUrl, supabaseKey);
+
+  window.guardarPaciente = async function () {
     const nombre = document.getElementById("nombre").value;
     const telefono = document.getElementById("telefono").value;
 
     if (!nombre) return alert("Escribe un nombre");
 
-    const paciente = {
-      nombre,
-      telefono
-    };
+    const { error } = await client
+      .from("pacientes")
+      .insert([{ nombre, telefono }]);
 
-    pacientes.push(paciente);
+    if (error) {
+      alert("Error guardando paciente");
+      console.log(error);
+      return;
+    }
 
-    mostrarPacientes();
+    document.getElementById("nombre").value = "";
+    document.getElementById("telefono").value = "";
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    cargarPacientes();
+  };
 
+  window.cargarPacientes = async function () {
+    const cont = document.getElementById("listaPacientes");
+    cont.innerHTML = "";
+
+    const { data, error } = await client
+      .from("pacientes")
+      .select("*")
+      .order("id", { ascending: false });
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    data.forEach((p) => {
+      cont.innerHTML += `<p>👤 ${p.nombre} - ${p.telefono}</p>`;
+    });
+  };
+
+  window.toggle = function (id) {
+    const el = document.getElementById(id);
+    el.style.display = el.style.display === "block" ? "none" : "block";
+  };
+
+  cargarPacientes();
+</script>
 <script>
   const supabaseUrl = "https://xgbwkppdqoqnecupqzsh.supabase.co";
   const supabaseKey = "PEGA_AQUI_TU_ANON_KEY";
