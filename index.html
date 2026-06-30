@@ -1,65 +1,144 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Sistema Clínico - Dra. Nails</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sistema Clínico - Dra. Nails</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f7f3f0;
-            margin: 0;
-            padding: 0;
-        }
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+    }
 
-        header {
-            background: #6d4c41;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: bold;
-        }
+    header {
+      background: #6d4c41;
+      color: white;
+      padding: 18px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+    }
 
-        .container {
-            padding: 20px;
-        }
+    .container {
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
 
-        .btn {
-            display: block;
-            background: white;
-            padding: 15px;
-            margin: 12px 0;
-            border-radius: 12px;
-            text-align: center;
-            text-decoration: none;
-            color: #6d4c41;
-            font-weight: bold;
-            box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
-        }
+    .card {
+      background: white;
+      padding: 15px;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+      text-align: center;
+      font-weight: bold;
+      color: #6d4c41;
+    }
 
-        .btn:hover {
-            background: #eee;
-        }
-    </style>
+    .card:hover {
+      background: #f0e7e2;
+    }
+
+    .panel {
+      display: none;
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 10px;
+    }
+
+    input, button, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #6d4c41;
+      color: white;
+      border: none;
+      font-weight: bold;
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-    🏥 Sistema Clínico - Dra. Nails
+  🏥 Sistema Clínico - Dra. Nails
 </header>
 
 <div class="container">
 
-    <a class="btn" href="#">👤 Pacientes</a>
-    <a class="btn" href="#">📅 Agenda</a>
-    <a class="btn" href="#">🩺 Atenciones</a>
-    <a class="btn" href="#">💰 Finanzas</a>
-    <a class="btn" href="#">📦 Inventario</a>
+  <div class="card" onclick="toggle('pacientes')">👤 Pacientes</div>
+  <div id="pacientes" class="panel">
+    <input id="nombre" placeholder="Nombre del paciente">
+    <input id="telefono" placeholder="Teléfono">
+    <button onclick="guardarPaciente()">Guardar paciente</button>
+    <div id="listaPacientes"></div>
+  </div>
+
+  <div class="card" onclick="toggle('agenda')">📅 Agenda</div>
+  <div id="agenda" class="panel">
+    <p>Próximamente conectada a Supabase</p>
+  </div>
+
+  <div class="card" onclick="toggle('finanzas')">💰 Finanzas</div>
+  <div id="finanzas" class="panel">
+    <p>Próximamente conectado</p>
+  </div>
+
+  <div class="card" onclick="toggle('inventario')">📦 Inventario</div>
+  <div id="inventario" class="panel">
+    <p>Próximamente conectado</p>
+  </div>
 
 </div>
+
+<script>
+  function toggle(id) {
+    const el = document.getElementById(id);
+    el.style.display = el.style.display === "block" ? "none" : "block";
+  }
+
+  let pacientes = [];
+
+  function guardarPaciente() {
+    const nombre = document.getElementById("nombre").value;
+    const telefono = document.getElementById("telefono").value;
+
+    if (!nombre) return alert("Escribe un nombre");
+
+    const paciente = {
+      nombre,
+      telefono
+    };
+
+    pacientes.push(paciente);
+
+    mostrarPacientes();
+
+    document.getElementById("nombre").value = "";
+    document.getElementById("telefono").value = "";
+  }
+
+  function mostrarPacientes() {
+    const cont = document.getElementById("listaPacientes");
+    cont.innerHTML = "";
+
+    pacientes.forEach((p, i) => {
+      cont.innerHTML += `
+        <p>👤 ${p.nombre} - ${p.telefono}</p>
+      `;
+    });
+  }
+</script>
 
 </body>
 </html>
